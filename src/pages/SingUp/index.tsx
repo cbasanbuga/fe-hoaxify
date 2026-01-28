@@ -13,6 +13,7 @@ import {Button} from "@/components/ui/button";
 import {Controller, FormProvider, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {type SignupFormValues, signUpSchema} from "@/auth/schema"
+import axios from "axios";
 
 
 function SignUp() {
@@ -29,9 +30,10 @@ function SignUp() {
     });
 
     function onSubmit(data: SignupFormValues) {
-        console.log(data)
+        axios.post("/api/v1/users", {
+            ...data
+        })
     }
-
 
     return (
         <div className="w-full max-w-md m-auto">
@@ -75,7 +77,8 @@ function SignUp() {
                             )} name={"passwordRepeat"}/>
 
                             <Field>
-                                <Button disabled={!singupForm.formState.isValid} className="cursor-pointer" type="submit">Submit</Button>
+                                <Button disabled={!singupForm.formState.isValid} className="cursor-pointer"
+                                        type="submit">Submit</Button>
                             </Field>
                         </FieldGroup>
                     </FieldSet>
@@ -83,8 +86,7 @@ function SignUp() {
             </FormProvider>
 
         </div>
-    )
-        ;
+    );
 }
 
 export default SignUp;
