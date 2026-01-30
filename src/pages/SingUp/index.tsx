@@ -14,6 +14,9 @@ import {Controller, FormProvider, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {type SignupFormValues, signUpSchema} from "@/auth/schema"
 import axios from "axios";
+import {Spinner} from "@/components/ui/spinner.tsx";
+import {Badge} from "@/components/ui/badge.tsx";
+import {toast} from "sonner";
 
 
 function SignUp() {
@@ -29,11 +32,14 @@ function SignUp() {
         }
     });
 
-    function onSubmit(data: SignupFormValues) {
-        axios.post("/api/v1/users", {
+    async function onSubmit(data: SignupFormValues) {
+        const response = await axios.post("/api/v1/users", {
             ...data
-        })
+        });
+
+        toast.success(response.data.message);
     }
+
 
     return (
         <div className="w-full max-w-md m-auto">
@@ -77,6 +83,10 @@ function SignUp() {
                             )} name={"passwordRepeat"}/>
 
                             <Field>
+                                {
+                                    singupForm.formState.isSubmitting && (
+                                        <Badge variant={"outline"}><Spinner/>Kaydediliyor...</Badge>)
+                                }
                                 <Button disabled={!singupForm.formState.isValid} className="cursor-pointer"
                                         type="submit">Submit</Button>
                             </Field>
@@ -84,7 +94,6 @@ function SignUp() {
                     </FieldSet>
                 </form>
             </FormProvider>
-
         </div>
     );
 }
